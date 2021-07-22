@@ -5,6 +5,7 @@ channels:
   - defaults
 dependencies:
   - _r-mutex=1.0.1
+  - bedtools=2.30.0
   - bowtie2=2.4.4
   - bwidget=1.9.14
   - bzip2=1.0.8
