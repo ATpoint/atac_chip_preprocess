@@ -38,7 +38,7 @@ the dot separates the basename from the `.bt2` suffix.
 
 Alternatively, if a bowtie2 index has already been made with this (or any other) command or downloaded from a repository, then it can be specified via the `--idx` argument,
 e.g. `--idx /path/to/folder/with/*.bt2_files`. The folder is expected to only contain one index with all the files the indexing produces. 
-For mammalian genomes that is usllay four `.bt2` and two `.rev.bt2` files. These will then be used during aligment.
+For mammalian genomes that is usually four `.bt2` and two `.rev.bt2` files. These will then be used during alignment.
 
 Note that `--idx_pubmode 'move'` is not compatible with using the created index during the same run by the align process. If using 'move' then one has to specify the path to the index
 and invoke a second run. It is therefore preferred to first build an index with 'move' (so it can be long-term stored somewhere) and then run the alignment in a second run. Alternatively,
