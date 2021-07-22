@@ -71,15 +71,14 @@ an indexed `*_raw.bam` (BAI index) file and a flagstat. The minimal commands, as
 - `--trim_adapter 'AGATCGGAAGAGC'`          => sequence to trim, the default is the TruSeq adapter, Nextera would be CTGTCTCTTATACACATCT
 - `--trim_additional ''`                    => additional arguments for `cutadapt` beyond `-q --threads --rg-id -x` which are already set
 - `--align_threads 1`                       => threads for alignment
-- `--align_mem  '8.GB'`                     => allocated memory for alignment, should be enough for human and mouse
+- `--align_mem  '8.GB'`                     => allocated memory for alignment, should be enough for human and mouse, expected in GB
 - `--align_additional '\--very-sensitive'`  => additional parameters for bowtie2 alignment
 - `--align_dir $(realpath ./bam_raw/)`      => output directory for the BAM file, index and flagstat
 - `--align_pubmode 'rellink'`               => publish mode for [publishDir](https://www.nextflow.io/docs/latest/process.html#publishdir)
 - `--sort_threads 1`                        => threads for samtools sort
 - `--sort_mem '1G'`                         => memory per thread for samtools sort. This must be in the format recognized by `-@` of samtools sort, so <value><M/G/T>, e.g. '1G'
+                                               it is expected in GB, so at least '1G'.
 - `--sort_additional ''`                    => additional arguments for samtools sort beyond `-@ -m -o --write-index` which are already set
-- `--align_mem_total '9.GB'`                => tht total memory for this process to be allocated. It is the `--align_mem` + `--sort_mem`. Currently must be set manually when changing defaults.
-
 
 ### Filtering
 
