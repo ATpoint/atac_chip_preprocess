@@ -60,10 +60,14 @@ workflow ATAC_CHIP {
     // just a few %CPU (<<< 100% per core) so it should not merit an extra core:
         align_threads_overall = (params.align_threads + params.sort_threads + 1)
 
-        include{ Bowtie2Align } from './modules/align' addParams(   threads:    align_threads_overall,
-                                                                    memory:     params.align_mem_total    )                                                                        
+        // calculate total memory required for align+sort:
+        m1 = params.align_mem.replaceAll(".GB|GB|G|.", "")
+        m2 = params.sort_mem.replaceAll(".GB|GB|G|.", "")     
+        total_mem = (m1+m2)                                                                                                                                   
 
-    
+        include{ Bowtie2Align } from './modules/align' addParams(   threads:    align_threads_overall,
+                                                                    memory:     total_mem               )  
+
         Bowtie2Align(ch_fastq, use_index)
         use_bam_raw = Bowtie2Align.out.bam
     } else use_bam_raw = ''
