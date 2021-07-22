@@ -33,6 +33,7 @@ jobs:
           
       - name: test_conda
         run: |
+          nextflow run main.nf -profile test_index,conda
           nextflow run main.nf -profile test_paired,conda
           nextflow run main.nf -profile test_single,conda
           nextflow run main.nf -profile test_paired,conda --atacseq
