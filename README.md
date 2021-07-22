@@ -144,8 +144,6 @@ It can well range from 0.01 to some 0.2 - 0.3. it is encouraged to always check 
 For ATAC-seq this should well be > 0.1. On fresh ex vivo and cell line material (cells similar to hematopoietic progenitors from bone marrow or PBMCs) we usually get FRiPs up to 0.5,
 current record is 0.6 on a hematopoietic progenitor cell line. 
 
-![GIF](https://tenor.com/y6hy.gif)
-
 This is celltype-dependent and might be notably different in other celltypes/organs/tissues.
 
 **Options with defaults:** 
