@@ -16,7 +16,7 @@ respective image. Submission via the SLURM scheduler is possible with `-profile 
 For testing there are two profiles `-profile test_single/test_paired` which use some minimal example data in the `./test` folder, both can be used with or without the `--atacseq` option, see below for more details.
 
 
-#### Indexing
+### Indexing
 
 This processes indexes the genome with `bowtie-build`. The minimal indexing command is:
 
@@ -58,7 +58,7 @@ nextflow run main.nf --idx '/full/path/to/index_basename' --fastq '/path/to/fast
 Below we list all available params that can be used to customize the run.
 
 
-#### Trimming & Alignment
+### Trimming & Alignment
 
 This process trims fasta files (expected `*_{1,2}.fastq.gz` for paired-end and `*.fastq.gz` for single-end data) with `cutadapt`, streams it 
 directly into `bowtie2` for alignment and marks duplicates with `samblaster`. It then sorts the data with `samtools`. It produces no intermediate files, returning
@@ -81,7 +81,7 @@ an indexed `*_raw.bam` (BAI index) file and a flagstat. The minimal commands, as
 - `--align_mem_total '9.GB'`                => tht total memory for this process to be allocated. It is the `--align_mem` + `--sort_mem`. Currently must be set manually when changing defaults.
 
 
-#### Filtering
+### Filtering
 
 This process performs filtering on the sorted `*_raw.bam` file. This typically involves removal of non-primary chromosomes (unplaced scaffolds/contigs), MAPQ filtering, duplicate and chrM removal.
 There are four options that can be used to define the filtering which wrap around the `-q`,  `-f` and `-F` options of `samtools view` to filter MAPQ and by presence/absence of the bitwise flags,
@@ -109,7 +109,7 @@ and an option to specify which chromosomes (=alignments to that chromosome) to r
 - `--bamfilter_pubmode 'rellink'`               => publish mode for [publishDir](https://www.nextflow.io/docs/latest/process.html#publishdir)
 
 
-#### InsertSizes
+### InsertSizes
 
 If in paired-end mode this process will use Picard `CollectInsertSizeMetrics` to collect the paired-end insert sizes (TLENs) which can be used as a QC e.g. in ATAC-seq which should show the 
 characteristic banding pattern (...which one should already have seen on the Bioanalyzer/TapeStation).
@@ -121,7 +121,7 @@ characteristic banding pattern (...which one should already have seen on the Bio
 - `--isizes_pubmode 'rellink'`                  => publish mode for [publishDir](https://www.nextflow.io/docs/latest/process.html#publishdir)
 
 
-#### Cutsites extraction
+### Cutsites extraction
 
 This process runs if the `--atacseq` flag is set. It takes the filtered BAM file from above and extracts the transposase integration or "cutting" events which are then 5'-ends of the reads,
 shifted by +4/-5bp to account for the 9bp duplication event that the Tn5 creates when integrating into the target site. This is not really relevant for anything except when plotting something like
@@ -136,7 +136,7 @@ basepair-resolution insertion frequencies, e.g. during transcription factor foot
 - `--cutsites_pubmode 'rellink'`                => publish mode for [publishDir](https://www.nextflow.io/docs/latest/process.html#publishdir)
 
 
-#### FRiPs
+### FRiPs
 
 This process calls peaks with `macs2` and then uses `featureCounts` (subread package) on these peaks to calculate the Fractions Of Reads Per Peak (FRiPs) as a proxy for data quality. It is basically a measure of signal to noise ratio,
 as reads overlapping peaks are signal and all other reads are noise. For ChIP-seq this can have a wide range depending on protein abundance, antibody quality and the mood of the ChIP-god.
