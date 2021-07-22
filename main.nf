@@ -2,10 +2,13 @@
 
 nextflow.enable.dsl=2
 
+def latest_sha = "git rev-parse HEAD".execute()
+
 println ''
-println '|------------------------------------------------------------------'
-println "[Info] This is atac_chip_preprocess version ::: $params.version"
-println '|------------------------------------------------------------------'
+println '|-----------------------------------------------------------------------------------------------'
+println ''
+println "[Info] This is atac_chip_preprocess, latest sha ::: " + latest_sha.text
+println '|-----------------------------------------------------------------------------------------------'
 println ''
 
 // if no alignment then turn off everything else (that is only the case if only-indexing shall run)
