@@ -1,0 +1,33 @@
+// produce a BED file with cutsites:
+
+process Cutsites {
+
+    tag "$sample_id"
+
+    cpus params.cutsites_threads 
+    memory params.cutsites_mem 
+
+    publishDir params.cutsites_dir, mode: params.cutsites_pubmode
+
+    input:
+    tuple val(sample_id), path(bam), path(bai)                  
+
+    output:
+    tuple val("${sample_id}"), path("${sample_id}_cutsites.bed.gz"), emit: bed
+
+    script:
+
+    def thready = (params.cutsites_threads - 2)
+
+    """
+
+    #/ this is the same for paired-end and single-end as we count reads and not pairs/fragments:
+
+    bedtools bamtobed -i $bam \
+    | $baseDir/bin/shift_reads.sh /dev/stdin \
+    | sort -k1,1 -k2,2n -k3,3n -k6,6 -S ${params.cutsites_mem} --parallel=${thready} \
+    | bgzip -@ ${params.cutsites_threads} > ${sample_id}_cutsites.bed.gz
+    
+    """
+
+}
