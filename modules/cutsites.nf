@@ -17,7 +17,9 @@ process Cutsites {
 
     script:
 
-    def thready = (params.cutsites_threads - 2)
+    // depending on total allocated CPUs give the sort some extra
+    t = (task.cpus - 2)
+    if(t < 2) thready = 2 else thready = t
 
     """
 
