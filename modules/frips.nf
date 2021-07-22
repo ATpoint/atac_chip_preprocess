@@ -14,17 +14,22 @@ process FRiPs {
     path(saf)
 
     output:
-    path("*.counts"),       emit: counts
-    path("*.summary"),      emit: summary
+    path("*.counts"),       emit: counts,  optional: true
+    path("*.summary"),      emit: summary, optional: true
     path("*_frips.txt"),    emit: frips
 
     script:
 
     """
 
-    featureCounts $params.frips_additional -a $saf -F SAF -T $task.cpus -o ${saf.simpleName}.counts $bam
+    if [[ \$(cat $saf | wc -l) > 0 ]]; then
+        featureCounts $params.frips_additional -a $saf -F SAF -T $task.cpus -o ${saf.simpleName}.counts $bam
+        $baseDir/bin/calc_frips.sh ${saf.simpleName}.counts.summary | paste <(echo ${saf.simpleName}) <(cat /dev/stdin) > ${saf.simpleName}_frips.txt
+    else
+        paste <(echo ${saf.simpleName}) <(echo '0') > ${saf.simpleName}_frips.txt
+    fi    
 
-    $baseDir/bin/calc_frips.sh ${saf.simpleName}.counts.summary | paste <(echo ${saf.simpleName}) <(cat /dev/stdin) > ${saf.simpleName}_frips.txt
+    
 
     """
 
