@@ -5,10 +5,10 @@ nextflow.enable.dsl=2
 def latest_sha = "git rev-parse HEAD".execute()
 
 println ''
-println '|-----------------------------------------------------------------------------------------------'
+println '|-------------------------------------------------------------------------------------------------------------'
 println ''
-println "[Info] This is atac_chip_preprocess, latest sha ::: " + latest_sha.text
-println '|-----------------------------------------------------------------------------------------------'
+println "[Info] This is atac_chip_preprocess, latest comitted sha ::: " + latest_sha.text
+println '|-------------------------------------------------------------------------------------------------------------'
 println ''
 
 // if no alignment then turn off everything else (that is only the case if only-indexing shall run)
@@ -66,13 +66,21 @@ workflow ATAC_CHIP {
         // calculate total memory required for align+sort:
         m1 = params.align_mem.replaceAll(".GB|GB|G|.", "")
         m2 = params.sort_mem.replaceAll(".GB|GB|G|.", "")     
-        total_mem = (m1+m2)                                                                                                                                   
+        total_mem = (m1+m2)   
 
-        include{ Bowtie2Align } from './modules/align' addParams(   threads:    align_threads_overall,
-                                                                    memory:     total_mem               )  
+        if(params.trim_adapter == ''){
+            if(params.atacseq){
+                use_adapter = 'CTGTCTCTTATACACATCT' // Nextera
+            } else use_adapter = 'AGATCGGAAGAGC'    // TruSeq
+        } else use_adapter = params.trim_adapter    // custom user-provided
+
+        include{ Bowtie2Align } from './modules/align' addParams(   threads:        align_threads_overall,
+                                                                    memory:         total_mem,
+                                                                    trim_adapter:   use_adapter             )  
 
         Bowtie2Align(ch_fastq, use_index)
         use_bam_raw = Bowtie2Align.out.bam
+
     } else use_bam_raw = ''
 
     //-------------------------------------------------------------------------------------------------------------------------------//
