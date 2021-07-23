@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # atac_chip_preprocess
 
 This Nextflow pipeline is intended for preprocessing of DNA-seq
