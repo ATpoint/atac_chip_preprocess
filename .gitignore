@@ -3,3 +3,4 @@ testout
 work
 .DS_*
 trace*
+cleanup.sh
