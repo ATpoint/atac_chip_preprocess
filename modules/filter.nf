@@ -16,10 +16,15 @@ process FilterBam {
     tuple val("${sample_id}"), path("*.bam"), path("*.bai"), emit: bam    
 
     script:
+
+    // catch edge case when empty params.bamfilter_keepchr was provided (--params.bamfilter_keepchr '')
+    // to turn off chr filtering but nf interpreted it as boolean:
+    if(params.bamfilter_keepchr == true) { regex = "''" } else { regex = params.bamfilter_keepchr }
+
     """
 
     samtools idxstats $bam \
-    | cut -f1 | grep $params.bamfilter_keepchr | grep -v '*' \
+    | cut -f1 | grep $regex | grep -v '*' \
     | xargs samtools view --write-index $params.flag_keep $params.flag_remove \
         $params.bamfilter_additional -@ task.cpus -o ${sample_id}_filtered.bam##idx##${sample_id}_filtered.bam.bai $bam
 

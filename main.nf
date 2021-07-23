@@ -64,8 +64,8 @@ workflow ATAC_CHIP {
         align_threads_overall = (params.align_threads + params.sort_threads + 1)
 
         // calculate total memory required for align+sort:
-        m1 = params.align_mem.replaceAll(".GB|GB|G|.", "")
-        m2 = params.sort_mem.replaceAll(".GB|GB|G|.", "")     
+        m1 = params.align_mem.replaceAll(".GB|GB|G", "")
+        m2 = params.sort_mem.replaceAll(".GB|GB|G", "") * params.sort_threads
         total_mem = (m1+m2)   
 
         if(params.trim_adapter == ''){
