@@ -37,6 +37,8 @@ two profiles `-profile test_single/test_paired` which use some minimal
 example data in the `./test` folder, both can be used with or without
 the `--atacseq` option, see below for more details.
 
+<br>
+
 ### Indexing
 
 This process indexes the genome with `bowtie2-build`. The minimal
@@ -48,7 +50,7 @@ nextflow run main.nf --skip_align --ref_genome '/path/to/genome.fa.gz' --idx_nam
 
 This will run `bowtie2-build` on the reference genome (expected
 `*.fa.gz`) and then move the index files (named `idx.*`) to the folder
-specified in the `--idx_name` argument, e.g.
+specified in the `--idx_name` argument, e.g.   
 `--idx_name /scratch/username/index_dir/bowtie2_index_mm10/`.  
 Do not use `.` as delimiter of the index name as we expect that the dot
 separates the basename from the `.bt2` suffix.
@@ -74,7 +76,7 @@ Alternatively, if a bowtie2 index has already been made with this (or
 any other) command or downloaded from a repository such as the [bowtie2
 SourceForge
 website](http://bowtie-bio.sourceforge.net/bowtie2/manual.shtml), then
-it can be specified via the `--idx` argument, e.g.
+it can be specified via the `--idx` argument, e.g.   
 `--idx /path/to/index/prefix` so basically the `-x` argument of bowtie2,
 e.g. `--idx /scratch/user/index/genome` given that there are index files
 witn `genome.*bt2`.
@@ -108,6 +110,8 @@ cutting sites and slightly different peak calling parameters for the QC
 
 Below we list all available params that can be used to customize the
 run.
+
+<br>
 
 ### Trimming & Alignment
 
@@ -157,6 +161,8 @@ following params can be used to customize the run:
 Note that the total memory required for this process is:
 
 `sort_mem * sort_threads + align_mem`
+
+<br>
 
 ### Filtering
 
@@ -217,6 +223,8 @@ appropriate flags see
 -   `--bamfilter_pubmode 'rellink'`=\> publish mode for
     [publishDir](https://www.nextflow.io/docs/latest/process.html#publishdir)
 
+<br>
+
 ### InsertSizes
 
 If in paired-end mode this process will use `CollectInsertSizeMetrics`
@@ -236,6 +244,8 @@ banding pattern.
 -   `--isizes_pubmode 'rellink'`  
     =\> publish mode for
     [publishDir](https://www.nextflow.io/docs/latest/process.html#publishdir)
+
+<br>
 
 ### Cutsites extraction
 
@@ -265,6 +275,8 @@ and composition. Here it is only used as input for for peak calling/QC.
 -   `--cutsites_pubmode 'rellink'`  
     =\> publish mode for
     [publishDir](https://www.nextflow.io/docs/latest/process.html#publishdir)
+
+<br>
 
 ### FRiPs
 
@@ -339,6 +351,8 @@ celltypes/organs/tissues.
 -   `--frips_pubmode 'rellink'`   
     =\> publish mode for
     [publishDir](https://www.nextflow.io/docs/latest/process.html#publishdir)  
+
+<br>
 
 ## Citations
 
