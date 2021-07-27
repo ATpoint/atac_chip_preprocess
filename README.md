@@ -9,8 +9,11 @@ features might be added in later versions, the defaults should work well
 for most input data though.
 
 <br>
+
 ![CI](https://github.com/ATpoint/atac_chip_preprocess/actions/workflows/basic_test.yml/badge.svg)
+
 <br>
+
 ## Usage
 
 Up front: Do not use `.` as delimiters in file- or folder names. We
