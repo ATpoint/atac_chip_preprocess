@@ -3,7 +3,8 @@ FROM condaforge/mambaforge:4.10.3-1
 COPY ["environment.yml", "./"]
 
 RUN apt update && \
-    apt install --assume-yes wget nano
+    DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends tzdata wget nano && \
+    apt-get clean
 
 RUN mamba env update --name base --file environment.yml
 
