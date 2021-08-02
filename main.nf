@@ -7,7 +7,8 @@ def latest_sha = "git rev-parse HEAD".execute()
 println ''
 println '|-------------------------------------------------------------------------------------------------------------'
 println ''
-println "[Info] This is atac_chip_preprocess, latest comitted sha ::: " + latest_sha.text
+println "[Info] This is atac_chip_preprocess"
+println ''
 println '|-------------------------------------------------------------------------------------------------------------'
 println ''
 
