@@ -14,7 +14,8 @@ println '|----------------------------------------------------------------------
 println ''
 
 // if no alignment then turn off everything else (that is only the case if only-indexing shall run)
-if(params.skip_align) params.skip_bamfilter = true
+if(params.skip_align) skip_bamfilter = true
+if(params.skip_bamfilter) skip_bamfilter = true
 
 // make sure the fastq channel is handled properly:
 // Check for presence of the fastq files, throw error if empty or set to null if only indexing shall be executed:
@@ -88,7 +89,7 @@ workflow ATAC_CHIP {
     //-------------------------------------------------------------------------------------------------------------------------------//
     // Filtering of the aligned BAM file.
 
-    if(!params.skip_bamfilter){
+    if(!skip_bamfilter){
 
         // set defaults for -f and -F option of samtools view in case the params from the config file are empty
         f = params.bamfilter_flag_keep
@@ -122,7 +123,7 @@ workflow ATAC_CHIP {
 
     //-------------------------------------------------------------------------------------------------------------------------------//
     // In ATAC-seq mode produce a bed.gz with the cutting sites:
-    if(params.atacseq & !params.skip_align){
+    if(params.atacseq & !skip_bamfilter){
 
         // process needs three threads at least (one for awk, one for bedtools and one for sort)
         cutsite_threads = (2 + params.cutsites_threads)
@@ -134,7 +135,7 @@ workflow ATAC_CHIP {
 
     //-------------------------------------------------------------------------------------------------------------------------------//
     // Basic QC, for this call peaks and calculate FRiPs:
-    if(!params.skip_align){
+    if(!skip_bamfilter){
 
         // experimental feature, README recommends not to use
         if(params.macs_control == '') { macs_ctrl = [] } else macs_ctrl = params.macs_control
