@@ -14,8 +14,12 @@ println '|----------------------------------------------------------------------
 println ''
 
 // if no alignment then turn off everything else (that is only the case if only-indexing shall run)
-if(params.skip_align) skip_bamfilter = true
-if(params.skip_bamfilter) skip_bamfilter = true
+if(params.skip_align) {
+    skip_bamfilter = true
+} else skip_bamfilter = false
+if(params.skip_bamfilter) {
+    skip_bamfilter = true
+} else skip_bamfilter = false
 
 // make sure the fastq channel is handled properly:
 // Check for presence of the fastq files, throw error if empty or set to null if only indexing shall be executed:
