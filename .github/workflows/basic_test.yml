@@ -4,11 +4,13 @@ name: CI
 
 on:
   push:
-    branches: [ dev, main ]
-      paths-ignore:
-        - README.md
-        - .gitignore
-        - versions_DockerHub.md
+    branches: 
+      - dev
+      - main
+    paths-ignore:
+      - README.md
+      - .gitignore
+      - versions_DockerHub.md
         
   pull_request:
     branches: [ main ]
