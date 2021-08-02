@@ -7,6 +7,9 @@ println '|----------------------------------------------------------------------
 println ''
 println "[Info] This is atac_chip_preprocess"
 println ''
+println "The below summary of all params can be found in the .nextflow.log file:" 
+println("$params")
+println ''
 println '|-------------------------------------------------------------------------------------------------------------'
 println ''
 
