@@ -44,7 +44,7 @@ process Bowtie2Align {
 
     if [[ $params.mode == "single" ]]; then
 
-        \$trim_constant ${reads} \
+        eval \$trim_constant ${reads} \
         | eval \$bowtie2_constant -U - \
         | samblaster --ignoreUnmated \
         | eval \$sort_constant
