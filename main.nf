@@ -80,7 +80,7 @@ workflow ATAC_CHIP {
         // calculate total memory required for align+sort:
         m1 = params.align_mem.replaceAll(".GB|GB|G", "").toInteger()
         m2 = params.sort_mem.replaceAll(".GB|GB|G", "").toInteger() * params.sort_threads
-        total_mem = (m1+m2)  
+        total_mem = "${(m1+m2)}.GB"
 
         if(params.trim_adapter == ''){
             if(params.atacseq){
