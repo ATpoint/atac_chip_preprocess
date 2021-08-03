@@ -28,10 +28,6 @@ if(params.only_idx){
     fastq            = params.fastq
 }
 
-// validation:
-def diff = params.keySet() - params
-println diff
-
 // make sure the fastq channel is handled properly:
 // Check for presence of the fastq files, throw error if empty or set to null if only indexing shall be executed:
 if(!skip_align) {
