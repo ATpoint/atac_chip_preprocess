@@ -13,19 +13,30 @@ println ''
 println '|-------------------------------------------------------------------------------------------------------------'
 println ''
 
-// if no alignment then turn off everything else (that is only the case if only-indexing shall run)
-if(params.skip_align) {
-    skip_bamfilter = true
-} else skip_bamfilter = false
-if(params.skip_bamfilter) {
-    skip_bamfilter = true
-} else skip_bamfilter = false
+// if only_idx then imply skipping everything:
+if(params.only_idx){
+    skip_align       = true
+    skip_bamfilter   = true
+    skip_isizes      = true
+    skip_qc          = true
+    fastq            = null
+} else {
+    skip_align       = params.skip_align
+    skip_bamfilter   = params.skip_bamfilter
+    skip_isizes      = params.skip_isizes
+    skip_qc          = params.skip_qc
+    fastq            = params.fastq
+}
+
+// validation:
+def diff = params.keySet() - params
+println diff
 
 // make sure the fastq channel is handled properly:
 // Check for presence of the fastq files, throw error if empty or set to null if only indexing shall be executed:
-if(!params.skip_align) {
+if(!skip_align) {
 
-    if(params.fastq.isEmpty()){
+    if(fastq.isEmpty()){
         println("[Error] --fastq is empty!")
         System.exit(1)
     }
@@ -33,11 +44,11 @@ if(!params.skip_align) {
     if(params.mode == "paired"){
 
         ch_fastq = Channel
-                    .fromFilePairs(params.fastq, checkIfExists: true)
+                    .fromFilePairs(fastq, checkIfExists: true)
 
     } else if(params.mode == "single"){
         ch_fastq = Channel
-                    .fromPath(params.fastq, checkIfExists: true)
+                    .fromPath(fastq, checkIfExists: true)
                     .map { file -> tuple(file.simpleName, file) }
     }
 
@@ -64,7 +75,7 @@ workflow ATAC_CHIP {
     //-------------------------------------------------------------------------------------------------------------------------------//
     // Trim/Alignment
 
-    if(!params.skip_align) {
+    if(!skip_align) {
 
     // calculate total threads required (bowtie2+samtools-sort+cutadapt + cutadapt). Ignore samblaster as it runs on
     // just a few %CPU (<<< 100% per core) so it should not merit an extra core:
@@ -117,7 +128,7 @@ workflow ATAC_CHIP {
 
     //-------------------------------------------------------------------------------------------------------------------------------//
     // Insertsize metrics:
-    if(params.mode == 'paired' && !params.skip_align && !params.skip_isizes){
+    if(params.mode == 'paired' && !skip_align && !skip_isizes){
 
         include { InsertSizes } from './modules/isizes'
 
@@ -139,7 +150,7 @@ workflow ATAC_CHIP {
 
     //-------------------------------------------------------------------------------------------------------------------------------//
     // Basic QC, for this call peaks and calculate FRiPs:
-    if(!skip_bamfilter){
+    if(!skip_bamfilter && !skip_qc){
 
         // experimental feature, README recommends not to use
         if(params.macs_control == '') { macs_ctrl = [] } else macs_ctrl = params.macs_control
