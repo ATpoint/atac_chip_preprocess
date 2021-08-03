@@ -26,7 +26,7 @@ process FilterBam {
     samtools idxstats $bam \
     | cut -f1 | grep $regex | grep -v '*' \
     | xargs samtools view --write-index $params.flag_keep $params.flag_remove \
-        $params.bamfilter_additional -@ task.cpus -o ${sample_id}_filtered.bam##idx##${sample_id}_filtered.bam.bai $bam
+        $params.bamfilter_additional -@ $task.cpus -o ${sample_id}_filtered.bam##idx##${sample_id}_filtered.bam.bai $bam
 
     samtools flagstat -@ $params.align_threads ${sample_id}_filtered.bam > ${sample_id}_filtered.flagstat        
     
