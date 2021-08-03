@@ -15,8 +15,8 @@ process Bowtie2Align {
 
     output:
     tuple val("${sample_id}"), path("${sample_id}_raw.bam"), path("${sample_id}_raw.bam.bai"), emit: bam
-
     path("${sample_id}_raw.flagstat"), emit: flagstat
+    path("${sample_id}_tmpsort*.bam"), optional: true // for tmp files during sort
     
     script:
     
@@ -31,7 +31,7 @@ process Bowtie2Align {
 
     trim_constant='cutadapt $params.trim_additional --quiet -j 1 -a $params.trim_adapter'
 
-    sort_constant='samtools sort $params.sort_additional --write-index -@ $params.sort_threads -m $params.sort_mem -o ${sample_id}_raw.bam##idx##${sample_id}_raw.bam.bai'
+    sort_constant='samtools sort $params.sort_additional --write-index -@ $params.sort_threads -m $params.sort_mem -T ${sample_id}_tmpsort -o ${sample_id}_raw.bam##idx##${sample_id}_raw.bam.bai'
 
     if [[ $params.mode == "paired" ]]; then
 
