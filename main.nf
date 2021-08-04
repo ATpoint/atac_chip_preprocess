@@ -136,9 +136,12 @@ workflow ATAC_CHIP {
     // In ATAC-seq mode produce a bed.gz with the cutting sites:
     if(params.atacseq & !skip_bamfilter){
 
-        // process needs three threads at least (one for awk, one for bedtools and one for sort)
-        cutsite_threads = (2 + params.cutsites_threads)
-        include{ Cutsites } from './modules/cutsites' addParams(threads: cutsite_threads)
+        // need at least 3 threads, (bedtools+awk+sort, and then later for bgzip which starts when sort finishes)
+        if(params.cutsites_threads < 3){
+            if(!params.testing) { cutsites_threads = 3 } else { cutsites_threads = 2 } // there are only two CPUs on the Linux VMs for CI testing
+        } else { cutsites_threads = params.cutsites_threads }
+
+        include{ Cutsites } from './modules/cutsites' addParams(threads: cutsites_threads)
 
         Cutsites(use_filtered_bam)
 
