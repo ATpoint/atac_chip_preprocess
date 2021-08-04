@@ -13,7 +13,8 @@ process FilterBam {
     tuple val(sample_id), path(bam), path(bai)                  
 
     output:
-    tuple val("${sample_id}"), path("*.bam"), path("*.bai"), emit: bam    
+    tuple val("${sample_id}"), path("*.bam"), path("*.bai"), emit: bam   
+    path("${sample_id}_filtered.flagstat"), emit: flagstat
 
     script:
 
@@ -28,7 +29,7 @@ process FilterBam {
     | xargs samtools view --write-index $params.flag_keep $params.flag_remove \
         $params.bamfilter_additional -@ $task.cpus -o ${sample_id}_filtered.bam##idx##${sample_id}_filtered.bam.bai $bam
 
-    samtools flagstat -@ $params.align_threads ${sample_id}_filtered.bam > ${sample_id}_filtered.flagstat        
+    samtools flagstat -@ $task.cpus ${sample_id}_filtered.bam > ${sample_id}_filtered.flagstat        
     
     """
 
