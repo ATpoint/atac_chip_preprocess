@@ -4,7 +4,7 @@ process Cutsites {
 
     tag "$sample_id"
 
-    cpus params.cutsites_threads 
+    cpus params.threads 
     memory params.cutsites_mem 
 
     publishDir params.cutsites_dir, mode: params.cutsites_pubmode
@@ -18,8 +18,7 @@ process Cutsites {
     script:
 
     // depending on total allocated CPUs give the sort some extra
-    t = (task.cpus - 2)
-    if(t < 2) thready = 2 else thready = t
+    if(task.cpus == 2) { thready = 1 } else { thready = (task.cpus - 2) }
 
     """
 
@@ -28,7 +27,7 @@ process Cutsites {
     bedtools bamtobed -i $bam \
     | $baseDir/bin/shift_reads.sh /dev/stdin \
     | sort -k1,1 -k2,2n -k3,3n -k6,6 -S ${params.cutsites_mem} --parallel=${thready} \
-    | bgzip -@ ${params.cutsites_threads} > ${sample_id}_cutsites.bed.gz
+    | bgzip -@ 1 > ${sample_id}_cutsites.bed.gz
     
     """
 
