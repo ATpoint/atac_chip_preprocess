@@ -5,7 +5,7 @@ process Cutsites {
     tag "$sample_id"
 
     cpus params.threads 
-    memory params.cutsites_mem 
+    memory params.memory
 
     publishDir params.cutsites_dir, mode: params.cutsites_pubmode
 

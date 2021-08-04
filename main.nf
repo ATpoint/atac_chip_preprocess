@@ -141,7 +141,12 @@ workflow ATAC_CHIP {
             if(!params.testing) { cutsites_threads = 3 } else { cutsites_threads = 2 } // there are only two CPUs on the Linux VMs for CI testing
         } else { cutsites_threads = params.cutsites_threads }
 
-        include{ Cutsites } from './modules/cutsites' addParams(threads: cutsites_threads)
+        // the requested memory should be the sort memory (--cutsites_mem) with 10% extra to avoid
+        // requested memory being near limit and oom kill on SLURM
+        cutsites_mem = "${params.cutsites_mem.replaceAll(".GB|GB|G", "").toInteger() * 1.1}GB"
+
+        include{ Cutsites } from './modules/cutsites' addParams(threads: cutsites_threads,
+                                                                memory:  cutsites_mem)
 
         Cutsites(use_filtered_bam)
 
