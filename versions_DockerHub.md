@@ -1,6 +1,6 @@
 # Docker Hub Versions
 
-Docker images are being built manually on a local machine and then pushed to https://hub.docker.com/r/atpoint/atac_chip_preprocess.  
+Docker images are being built manually on GitPod and then pushed to https://hub.docker.com/r/atpoint/atac_chip_preprocess.  
 Changes are tracked here.  
 
 <br>
