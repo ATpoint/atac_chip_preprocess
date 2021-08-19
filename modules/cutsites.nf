@@ -25,7 +25,7 @@ process Cutsites {
     #/ this is the same for paired-end and single-end as we count reads and not pairs/fragments:
 
     bedtools bamtobed -i $bam \
-    | $baseDir/bin/shift_reads.sh /dev/stdin \
+    | bash $baseDir/bin/shift_reads.sh /dev/stdin \
     | sort -k1,1 -k2,2n -k3,3n -k6,6 -S ${params.cutsites_mem} --parallel=${thready} \
     | bgzip -@ 1 > ${sample_id}_cutsites.bed.gz
     
