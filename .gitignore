@@ -4,3 +4,4 @@ work
 .DS_*
 trace*
 cleanup.sh
+tests.sh
