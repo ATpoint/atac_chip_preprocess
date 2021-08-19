@@ -37,7 +37,8 @@ process MacsPeaks {
         -t $infile $ctrl -n ${sample_id}${params.macs_suffix}
 
     #/ write as SAF:
-    $baseDir/bin/write_saf.sh ${sample_id}${params.macs_suffix}_peaks.{narrowPeak,broadPeak} > ${sample_id}${params.macs_suffix}_peaks.saf
+    bash $baseDir/bin/write_saf.sh \
+        ${sample_id}${params.macs_suffix}_peaks.{narrowPeak,broadPeak} > ${sample_id}${params.macs_suffix}_peaks.saf
 
     """
 

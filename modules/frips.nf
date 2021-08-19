@@ -24,7 +24,8 @@ process FRiPs {
 
     if [[ \$(cat $saf | wc -l) > 0 ]]; then
         featureCounts $params.frips_additional -a $saf -F SAF -T $task.cpus -o ${saf.simpleName}.counts $bam
-        $baseDir/bin/calc_frips.sh ${saf.simpleName}.counts.summary | paste <(echo ${saf.simpleName}) <(cat /dev/stdin) > ${saf.simpleName}_frips.txt
+        bash $baseDir/bin/calc_frips.sh ${saf.simpleName}.counts.summary \
+        | paste <(echo ${saf.simpleName}) <(cat /dev/stdin) > ${saf.simpleName}_frips.txt
     else
         paste <(echo ${saf.simpleName}) <(echo '0') > ${saf.simpleName}_frips.txt
     fi    
