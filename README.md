@@ -24,7 +24,7 @@ Output will be in `atac_chip_preprocess_results/bowtie2_idx/` created in the loc
 ```bash
 
 NXF_VER=21.04.3 \
-    nextflow run atpoint/atac_chip_preprocess -r 2.0 -profile singularity,slurm -with-trace -with-report report.html \
+    nextflow run atpoint/atac_chip_preprocess -r v2.0 -profile singularity,slurm -with-trace -with-report report.html \
         --ref_genome /path/to/genome.fa.gz --idx_threads 16 --idx_mem '16.GB' --only_idx --queue 'normal' \
         -bg > report.log
 
@@ -36,7 +36,7 @@ add additionally the `--atacseq` flag.
 ```bash
 
 NXF_VER=21.04.3 \
-    nextflow run atpoint/atac_chip_preprocess -r 2.0 -profile singularity,slurm -with-trace -with-report report.html \
+    nextflow run atpoint/atac_chip_preprocess -r v2.0 -profile singularity,slurm -with-trace -with-report report.html \
         --idx path/to/idx/idxbasename \
         --fastq path/to/fastqfolder/*_{1,2}.fastq.gz' \
         --align_threads 12 --sort_threads 2 --sort_mem '4G' --queue 'normal' \
