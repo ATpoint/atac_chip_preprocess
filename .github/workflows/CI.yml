@@ -8,9 +8,9 @@ on:
       - dev
       - main
     paths-ignore:
-      - README.md
-      - .gitignore
-      - versions_DockerHub.md
+      - '*.md'
+      - '*.ignore'
+      - LICENSE
         
   pull_request:
     branches: [ main ]
