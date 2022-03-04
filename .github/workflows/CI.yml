@@ -36,14 +36,6 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
           
-      - name: test_conda
-        run: |
-          NXF_VER=21.04.3 nextflow run main.nf -profile test_index,conda
-          NXF_VER=21.04.3 nextflow run main.nf -profile test_paired,conda
-          NXF_VER=21.04.3 nextflow run main.nf -profile test_single,conda
-          NXF_VER=21.04.3 nextflow run main.nf -profile test_paired,conda --atacseq
-          NXF_VER=21.04.3 nextflow run main.nf -profile test_single,conda --atacseq
-
       - name: test_docker
         run: |
           NXF_VER=21.04.3 nextflow run main.nf -profile test_index,docker
