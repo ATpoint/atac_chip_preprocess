@@ -82,7 +82,7 @@ workflow ATAC_CHIP {
     //-------------------------------------------------------------------------------------------------------------------------------//
     // Indexing
 
-    
+    include{ Bowtie2Idx } from './modules/index'
     
     // Either make a new index from scratch or use provided one if exists:
     if(params.idx == ''){
