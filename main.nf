@@ -2,13 +2,37 @@
 
 nextflow.enable.dsl=2
 
+ANSI_RESET   = "\u001B[0m"
+ANSI_RED     = "\u001B[31m"
+ANSI_GREEN   = "\u001B[32m"
+ANSI_YELLOW  = "\u001B[33m"
+DASHEDDOUBLE = "=".multiply(121)
+
+// Check that NF version is 21.04.1 since we still have include statements in the workflow definitions
+// which is an error in later Nextflow versions.
+if( nextflow.version.matches(">21.04.3") ) {
+    println "$ANSI_RED" + "$DASHEDDOUBLE"
+    println "[VERSION ERROR] Please make sure you use a Nextflow version not greater 21.04.3"
+    println "=> You are running version $nextflow.version."
+    println "=> We recommend using NXF_VER=21.04.3 nextflow run (...)"
+    println "$DASHEDDOUBLE ${ANSI_RESET}"
+    System.exit(1)
+}
+
+// Print summary of all params:
+def max_char = params.keySet().collect { it.length() }.max()
 println ''
 println '|-------------------------------------------------------------------------------------------------------------'
 println ''
-println "[Info] This is atac_chip_preprocess"
+println "[Info] This is atac_chip_preprocess version: $params.version"
 println ''
-println "The below summary of all params can be found in the .nextflow.log file:" 
-println("$params")
+params.each { nm, en -> 
+        
+        def use_length = max_char - nm.length()
+        def spacer = ' '.multiply(use_length)
+        println "${nm} ${spacer}:: ${en}" 
+
+    }
 println ''
 println '|-------------------------------------------------------------------------------------------------------------'
 println ''
@@ -58,7 +82,7 @@ workflow ATAC_CHIP {
     //-------------------------------------------------------------------------------------------------------------------------------//
     // Indexing
 
-    include{ Bowtie2Idx } from './modules/index'
+    
     
     // Either make a new index from scratch or use provided one if exists:
     if(params.idx == ''){

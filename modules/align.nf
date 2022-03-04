@@ -7,7 +7,9 @@ process Bowtie2Align {
     cpus params.threads
     memory params.memory
 
-    publishDir params.align_dir, mode: params.align_pubmode
+    errorStrategy 'finish'
+
+    publishDir params.align_dir, mode: params.publishmode
 
     input:
     tuple val(sample_id), path(reads)

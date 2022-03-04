@@ -7,7 +7,9 @@ process FilterBam {
     cpus params.bamfilter_threads 
     memory '1.GB' // this process should not have any notable footprint
 
-    publishDir params.bamfilter_dir, mode: params.bamfilter_pubmode
+    errorStrategy 'finish'
+    
+    publishDir params.bamfilter_dir, mode: params.publishmode
 
     input:
     tuple val(sample_id), path(bam), path(bai)                  

@@ -7,7 +7,9 @@ process Cutsites {
     cpus params.threads 
     memory params.memory
 
-    publishDir params.cutsites_dir, mode: params.cutsites_pubmode
+    errorStrategy 'finish'
+    
+    publishDir params.cutsites_dir, mode: params.publishmode
 
     input:
     tuple val(sample_id), path(bam), path(bai)                  

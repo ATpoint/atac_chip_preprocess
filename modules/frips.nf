@@ -7,7 +7,9 @@ process FRiPs {
     cpus    params.frips_threads
     memory  params.frips_mem
 
-    publishDir params.frips_dir, mode: params.frips_pubmode
+    errorStrategy 'finish'
+
+    publishDir params.frips_dir, mode: params.publishmode
 
     input:
     tuple val(sample_id), path(bam)

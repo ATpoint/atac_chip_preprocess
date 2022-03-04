@@ -7,7 +7,9 @@ process MacsPeaks {
     cpus 1
     memory params.macs_mem
 
-    publishDir params.macs_dir, mode: params.macs_pubmode
+    errorStrategy 'finish'
+    
+    publishDir params.macs_dir, mode: params.publishmode
 
     input:
     tuple val(sample_id), path(infile)

@@ -5,7 +5,9 @@ process Bowtie2Idx {
     cpus   params.idx_threads
     memory params.idx_mem
 
-    publishDir params.idx_name, mode: params.idx_pubmode
+    errorStrategy 'finish'
+
+    publishDir params.idx_name, mode: params.publishmode
 
     input:
     path(genome)

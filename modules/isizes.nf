@@ -7,7 +7,9 @@ process InsertSizes {
     cpus 1
     memory params.isizes_mem
 
-    publishDir params.isizes_dir, mode: params.isizes_pubmode
+    errorStrategy 'finish'
+
+    publishDir params.isizes_dir, mode: params.publishmode
 
     input:
     tuple val(sample_id), path(bam), path(bai)                  
