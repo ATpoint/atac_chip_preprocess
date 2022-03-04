@@ -19,13 +19,30 @@ if( nextflow.version.matches(">21.04.3") ) {
     System.exit(1)
 }
 
+//------------------------------------------------------------------------
+// Intro message
+//------------------------------------------------------------------------
+
+Date date = new Date()
+String datePart = date.format("yyyy-dd-MM -- ")
+String timePart = date.format("HH:mm:ss")
+def start_date = datePart + timePart
+
+println ""
+println "\u001B[33m$DASHEDDOUBLE"
+println "Pipeline:      atac_chip_preprocess"
+println "GitHub:        https://github.com/ATpoint/atac_chip_preprocess/"
+println "Documentation: https://github.com/ATpoint/atac_chip_preprocess/README.md"
+println "Author:        Alexander Toenges (@ATpoint)"
+println "Runname:       $workflow.runName"
+println "Profile:       $workflow.profile"
+println "Start:         $start_date"
+println "$DASHEDDOUBLE\u001B[0m"
+
 // Print summary of all params:
 def max_char = params.keySet().collect { it.length() }.max()
 println ''
-println '|-------------------------------------------------------------------------------------------------------------'
-println ''
-println "[Info] This is atac_chip_preprocess version: $params.version"
-println ''
+println "\u001B[33m$DASHEDDOUBLE"
 params.each { nm, en -> 
         
         def use_length = max_char - nm.length()
@@ -33,8 +50,7 @@ params.each { nm, en ->
         println "${nm} ${spacer}:: ${en}" 
 
     }
-println ''
-println '|-------------------------------------------------------------------------------------------------------------'
+println "$DASHEDDOUBLE\u001B[0m"
 println ''
 
 // if only_idx then imply skipping everything:
@@ -223,4 +239,22 @@ workflow ATAC_CHIP {
     
 }             
 
-workflow { ATAC_CHIP() }
+workflow { 
+    
+    ATAC_CHIP() 
+    
+    def od = params.outdir
+    workflow.onComplete {
+        Date date2 = new Date()
+        String datePart2 = date2.format("yyyy-dd-MM -- ")
+        String timePart2 = date2.format("HH:mm:ss")
+        def end_date = datePart2 + timePart2
+        println ""
+        println "Pipeline completed!"
+        println "End: $end_date"
+        println "Results are in:"
+        println od
+        println ""
+    }
+    
+}
