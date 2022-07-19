@@ -55,6 +55,9 @@ non-primary and supplementary alignments, PCR duplicates
 - calculate FRiPs per sample based on the per-sample peaks
 - check insert sizes (for paired-end data)
 
+Post-processing, such as combining peaks into a consensus or filtering for blacklisted regions is currently not implemented
+and should be done post-hoc.
+
 ## Containerization
 
 Use either `-profile docker,singularity` to run via the hardcoded container. 
