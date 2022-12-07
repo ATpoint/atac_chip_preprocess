@@ -1,14 +1,5 @@
 #! /usr/bin/env nextflow
 
-/* TO-DO
-- add labels to config file
-- add test profiles
-- put cpu and memory limits to all process script sections
-- write documentation
-- check citations, container and changelog
-- run a megatest on a real dataset
-*/
-
 nextflow.enable.dsl=2
 
 //------------------------------------------------------------------------
