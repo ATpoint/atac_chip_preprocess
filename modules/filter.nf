@@ -38,9 +38,9 @@ process Filter {
     echo ${task.process}:${meta.id} > command_lines.txt
     cat .command.sh | grep -vE '^#!/bin|versions.txt\$|command_lines.txt\$|cat \\.command.sh' | sed 's/  */ /g' | awk NF >> command_lines.txt
 
-    echo 'cut: \$(cut --version 2>&1 | head -n1 | cut -d " " -f4) >> versions.txt
+    echo 'cut:' \$(cut --version 2>&1 | head -n1 | cut -d " " -f4) > versions.txt
     echo 'grep:' \$(grep --version 2>&1 | head -n1 | cut -d " " -f4) >> versions.txt
-    echo 'samtools:' \$(samtools --version 2>&1 | head -n 1 | cut -d " " -f2) > versions.txt
+    echo 'samtools:' \$(samtools --version 2>&1 | head -n 1 | cut -d " " -f2) >> versions.txt
     echo 'xargs: \$(xargs --version 2>&1 | head -n1 | cut -d " " -f4) >> versions.txt
     """
     
