@@ -1,0 +1,22 @@
+awk: 1.3.4-20200120
+bc: 1.07.1
+bedGraphToBigWig: 4
+bedtools: v2.30.0
+bowtie2: 2.5.0
+cat: 8.30
+cut: $(cut --version 2>&1 | head -n1 | cut -d " " -f4) >> versions.txt
+echo grep: $(grep --version 2>&1 | head -n1 | cut -d " " -f4) >> versions.txt
+echo samtools: $(samtools --version 2>&1 | head -n 1 | cut -d " " -f2) > versions.txt
+echo xargs: 4.7.0
+fastp: 0.23.2
+FastQC: v0.11.9
+featureCounts: 2.0.1
+grep: 3.4
+macs2: 2.2.7.1
+MultiQC: 1.13
+picard: 2.27.4-SNAPSHOT
+R: 4.2.1
+sambamba: 0.8.2
+samblaster: 0.1.26
+samtools: 1.16.1
+sort: 8.30
