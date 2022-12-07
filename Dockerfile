@@ -1,12 +1,9 @@
-FROM condaforge/mambaforge:4.10.3-1
+FROM condaforge/mambaforge:4.14.0-0
 
 COPY ["environment.yml", "./"]
 
 RUN apt update && \
-    DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends tzdata bc wget nano && \
-    apt-get clean
+    DEBIAN_FRONTEND=noninteractive apt install -y --no-install-recommends pigz tzdata procps nano bc && \
+    apt-get clean 
 
-RUN mamba env update --name base --file environment.yml
-
-CMD echo "This is the atac_chip_preprocess image with versions:" $(mamba --version | tr "\n" "\ ")
-            
+RUN mamba env update --name base --file environment.yml && conda clean -a -q -y
