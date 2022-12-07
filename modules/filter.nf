@@ -41,7 +41,7 @@ process Filter {
     echo 'cut:' \$(cut --version 2>&1 | head -n1 | cut -d " " -f4) > versions.txt
     echo 'grep:' \$(grep --version 2>&1 | head -n1 | cut -d " " -f4) >> versions.txt
     echo 'samtools:' \$(samtools --version 2>&1 | head -n 1 | cut -d " " -f2) >> versions.txt
-    echo 'xargs: \$(xargs --version 2>&1 | head -n1 | cut -d " " -f4) >> versions.txt
+    echo 'xargs:' \$(xargs --version 2>&1 | head -n1 | cut -d " " -f4) >> versions.txt
     """
     
 }
