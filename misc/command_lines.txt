@@ -14,19 +14,28 @@ Align:sample3
 	sambamba sort -l 6 --tmpdir ./ -t 1 -m 1G -o sample3_raw.bam sample3_raw_unsorted.bam
 	samtools flagstat -@ 1 sample3_raw.bam > sample3_raw.flagstat
 Bigwigs:sample1	
-	bedtools genomecov -bga -ibam sample1_filtered.bam -pc | sort -k1,1 -k2,2n --parallel 1 > sample1_extended_unscaled.bedGraph
+	bedtools slop -b 50 -g chromsizes.txt -i sample1_cutsites.bed.gz | bedtools genomecov -bga -i - -g chromsizes.txt | sort -k1,1 -k2,2n --parallel 1 > sample1_extended_unscaled.bedGraph
 	bedGraphToBigWig sample1_extended_unscaled.bedGraph chromsizes.txt sample1_extended_unscaled.bigwig
 Bigwigs:sample2	
-	bedtools genomecov -bga -ibam sample2_filtered.bam -pc | sort -k1,1 -k2,2n --parallel 1 > sample2_extended_unscaled.bedGraph
+	bedtools slop -b 50 -g chromsizes.txt -i sample2_cutsites.bed.gz | bedtools genomecov -bga -i - -g chromsizes.txt | sort -k1,1 -k2,2n --parallel 1 > sample2_extended_unscaled.bedGraph
 	bedGraphToBigWig sample2_extended_unscaled.bedGraph chromsizes.txt sample2_extended_unscaled.bigwig
 Bigwigs:sample3	
-	bedtools genomecov -bga -ibam sample3_filtered.bam -fs 250 | sort -k1,1 -k2,2n --parallel 1 > sample3_extended_unscaled.bedGraph
+	bedtools slop -b 50 -g chromsizes.txt -i sample3_cutsites.bed.gz | bedtools genomecov -bga -i - -g chromsizes.txt | sort -k1,1 -k2,2n --parallel 1 > sample3_extended_unscaled.bedGraph
 	bedGraphToBigWig sample3_extended_unscaled.bedGraph chromsizes.txt sample3_extended_unscaled.bigwig
 CatFastq:sample1	
 	cat 1/sample1_1.fastq.gz 2/sample1_1.fastq.gz > sample1_merged_R1.fq.gz
 	cat 3/sample1_2.fastq.gz 4/sample1_2.fastq.gz > sample1_merged_R2.fq.gz
-Chromsizes:sample2	
-	samtools view -H sample2_raw.bam | grep ^@SQ | cut -f2,3 | awk 'OFS=\t {gsub(SN:|LN:,);print}' | sort -k1,1 > chromsizes.txt
+Chromsizes:sample3	
+	samtools view -H sample3_raw.bam | grep ^@SQ | cut -f2,3 | awk 'OFS=\t {gsub(SN:|LN:,);print}' | sort -k1,1 > chromsizes.txt
+Cutsites:sample1	
+	bedtools bamtobed -i sample1_filtered.bam | mawk 'OFS=	 {if ($6 == +) print $1, $2+4, $2+5, ., ., $6} {if ($6 == -) print $1, $3-5, $3-4, ., ., $6}' | sort -k1,1 -k2,2n -k3,3n -k6,6 -S 2G --parallel=1 > sample1_cutsites.bed
+	bgzip -l 6 -@ 1 sample1_cutsites.bed
+Cutsites:sample2	
+	bedtools bamtobed -i sample2_filtered.bam | mawk 'OFS=	 {if ($6 == +) print $1, $2+4, $2+5, ., ., $6} {if ($6 == -) print $1, $3-5, $3-4, ., ., $6}' | sort -k1,1 -k2,2n -k3,3n -k6,6 -S 2G --parallel=1 > sample2_cutsites.bed
+	bgzip -l 6 -@ 1 sample2_cutsites.bed
+Cutsites:sample3	
+	bedtools bamtobed -i sample3_filtered.bam | mawk 'OFS=	 {if ($6 == +) print $1, $2+4, $2+5, ., ., $6} {if ($6 == -) print $1, $3-5, $3-4, ., ., $6}' | sort -k1,1 -k2,2n -k3,3n -k6,6 -S 2G --parallel=1 > sample3_cutsites.bed
+	bgzip -l 6 -@ 1 sample3_cutsites.bed
 Fastqc:sample1	
 	fastqc --threads 1 -o ./ -q 1/sample1_merged_R1.fq.gz
 	fastqc --threads 1 -o ./ -q 2/sample1_merged_R2.fq.gz
@@ -46,19 +55,19 @@ Filter:sample3
 	samtools flagstat sample3_filtered.bam > sample3_filtered.flagstat
 Frips:sample1	
 	awk 'OFS=\t {print $1:$2-$3, $1, $2, $3, .}' sample1_peaks.narrowPeak > saf
-	featureCounts -p -a saf -F SAF -T 1 -o fc_out sample1_filtered.bam
+	featureCounts --read2pos 5 --readExtension3 4 -a saf -F SAF -T 1 -o fc_out sample1_filtered.bam
 	signal=$(grep -w 'Assigned' fc_out.summary | cut -f2)
 	noise=$(grep -w 'Unassigned_NoFeatures' fc_out.summary | cut -f2)
 	paste <(echo sample1) <(bc <<< scale=6;${signal}/(${signal}+${noise})) > sample1_frips.txt
 Frips:sample2	
 	awk 'OFS=\t {print $1:$2-$3, $1, $2, $3, .}' sample2_peaks.narrowPeak > saf
-	featureCounts -p -a saf -F SAF -T 1 -o fc_out sample2_filtered.bam
+	featureCounts --read2pos 5 --readExtension3 4 -a saf -F SAF -T 1 -o fc_out sample2_filtered.bam
 	signal=$(grep -w 'Assigned' fc_out.summary | cut -f2)
 	noise=$(grep -w 'Unassigned_NoFeatures' fc_out.summary | cut -f2)
 	paste <(echo sample2) <(bc <<< scale=6;${signal}/(${signal}+${noise})) > sample2_frips.txt
 Frips:sample3	
 	awk 'OFS=\t {print $1:$2-$3, $1, $2, $3, .}' sample3_peaks.narrowPeak > saf
-	featureCounts --readExtension3 250 -a saf -F SAF -T 1 -o fc_out sample3_filtered.bam
+	featureCounts --read2pos 5 --readExtension3 4 -a saf -F SAF -T 1 -o fc_out sample3_filtered.bam
 	signal=$(grep -w 'Assigned' fc_out.summary | cut -f2)
 	noise=$(grep -w 'Unassigned_NoFeatures' fc_out.summary | cut -f2)
 	paste <(echo sample3) <(bc <<< scale=6;${signal}/(${signal}+${noise})) > sample3_frips.txt
@@ -70,19 +79,19 @@ Multiqc:
 	multiqc .
 Peaks:sample1	
 	export OPENBLAS_NUM_THREADS=1 # should keep blas library from unwanted multithreading
-	macs2 callpeak --nomodel --extsize 150 --keep-dup=all --tempdir ./ -f BAMPE -g mm -t sample1_filtered.bam -n sample1_all
-	bedtools intersect -v -a sample1_all_peaks.narrowPeak -b mm10_encode_blacklist_v2.bed > sample1_peaks.narrowPeak
-	bedtools intersect -v -a sample1_all_summits.bed -b mm10_encode_blacklist_v2.bed > sample1_peaks.bed
+	macs2 callpeak --nomodel --extsize 150 --keep-dup=all --nomodel --extsize 100 --shift -50 --min-length 250 --tempdir ./ -f BED -g mm -t sample1_cutsites.bed.gz -n sample1_all
+	bedtools intersect -v -a sample1_all_peaks.narrowPeak -b mm10_combined_blacklist.bed > sample1_peaks.narrowPeak
+	bedtools intersect -v -a sample1_all_summits.bed -b mm10_combined_blacklist.bed > sample1_peaks.bed
 Peaks:sample2	
 	export OPENBLAS_NUM_THREADS=1 # should keep blas library from unwanted multithreading
-	macs2 callpeak --nomodel --extsize 150 --keep-dup=all --tempdir ./ -f BAMPE -g mm -t sample2_filtered.bam -n sample2_all
-	bedtools intersect -v -a sample2_all_peaks.narrowPeak -b mm10_encode_blacklist_v2.bed > sample2_peaks.narrowPeak
-	bedtools intersect -v -a sample2_all_summits.bed -b mm10_encode_blacklist_v2.bed > sample2_peaks.bed
+	macs2 callpeak --nomodel --extsize 150 --keep-dup=all --nomodel --extsize 100 --shift -50 --min-length 250 --tempdir ./ -f BED -g mm -t sample2_cutsites.bed.gz -n sample2_all
+	bedtools intersect -v -a sample2_all_peaks.narrowPeak -b mm10_combined_blacklist.bed > sample2_peaks.narrowPeak
+	bedtools intersect -v -a sample2_all_summits.bed -b mm10_combined_blacklist.bed > sample2_peaks.bed
 Peaks:sample3	
 	export OPENBLAS_NUM_THREADS=1 # should keep blas library from unwanted multithreading
-	macs2 callpeak --nomodel --extsize 150 --keep-dup=all --tempdir ./ -f BAM -g mm -t sample3_filtered.bam -n sample3_all
-	bedtools intersect -v -a sample3_all_peaks.narrowPeak -b mm10_encode_blacklist_v2.bed > sample3_peaks.narrowPeak
-	bedtools intersect -v -a sample3_all_summits.bed -b mm10_encode_blacklist_v2.bed > sample3_peaks.bed
+	macs2 callpeak --nomodel --extsize 150 --keep-dup=all --nomodel --extsize 100 --shift -50 --min-length 250 --tempdir ./ -f BED -g mm -t sample3_cutsites.bed.gz -n sample3_all
+	bedtools intersect -v -a sample3_all_peaks.narrowPeak -b mm10_combined_blacklist.bed > sample3_peaks.narrowPeak
+	bedtools intersect -v -a sample3_all_summits.bed -b mm10_combined_blacklist.bed > sample3_peaks.bed
 Trim:sample1	
 	fastp --dont_eval_duplication -z 6 --in1 sample1_merged_R1.fq.gz --in2 sample1_merged_R2.fq.gz --out1 sample1_trimmed_R1.fq.gz --out2 sample1_trimmed_R2.fq.gz --thread 1 --json sample1_fastp.json --html sample1_fastp.html
 Trim:sample2	
