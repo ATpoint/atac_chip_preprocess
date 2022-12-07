@@ -34,6 +34,8 @@ Downloading the [Docker image](https://hub.docker.com/r/atpoint/atac_chip_prepro
 NXF_VER=21.10.6 nextflow run atpoint/atac_chip_preprocess -r main -profile docker,test --keep_merge --keep_trim
 ```
 
+An overview of current software versions and exact command lines when using default settings of the pipeline can be found in the [misc directory](misc/).  
+
 ## Usage
 
 The three minimal parameters the user has to provide are the following ones:
