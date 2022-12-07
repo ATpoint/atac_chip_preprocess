@@ -1,38 +1,48 @@
-// Filter BAM files post alignment
+// This process runs filtering on sorted BAM files
 
-process FilterBam {
+process Filter {
 
-    tag "$sample_id"
+    tag "$meta.id"
 
-    cpus params.bamfilter_threads 
-    memory '1.GB' // this process should not have any notable footprint
+    label 'process_filter'
 
     errorStrategy 'finish'
     
-    publishDir params.bamfilter_dir, mode: params.publishmode
+    publishDir = [
+        path: params.outdir,
+        mode: params.publishmode,
+        saveAs: { filename -> filename.equals("versions.txt") || filename.equals("command_lines.txt") ? null : filename } 
+    ]
+
+    container params.container
 
     input:
-    tuple val(sample_id), path(bam), path(bai)                  
+    tuple val(meta), path(bam), path(bai)
+    val(flag_remove)
+    val(chr_regex)
 
     output:
-    tuple val("${sample_id}"), path("*.bam"), path("*.bai"), emit: bam   
-    path("${sample_id}_filtered.flagstat"), emit: flagstat
-
+    tuple val(meta), path("${meta.id}_filtered.bam"), path("${meta.id}_filtered.bam.bai"), emit: tuple_bam
+    tuple val(meta), path("${meta.id}_filtered.flagstat"), emit: tuple_flagstat
+    tuple path("versions.txt"), path("command_lines.txt"), emit: versions
+    
     script:
-
-    // catch edge case when empty params.bamfilter_keepchr was provided (--params.bamfilter_keepchr '')
-    // to turn off chr filtering but nf interpreted it as boolean:
-    if(params.bamfilter_keepchr == true) { regex = "''" } else { regex = params.bamfilter_keepchr }
-
-    """
-
-    samtools idxstats $bam \
-    | cut -f1 | grep $regex | grep -v '*' \
-    | xargs samtools view --write-index $params.flag_keep $params.flag_remove \
-        $params.bamfilter_additional -@ $task.cpus -o ${sample_id}_filtered.bam##idx##${sample_id}_filtered.bam.bai $bam
-
-    samtools flagstat -@ $task.cpus ${sample_id}_filtered.bam > ${sample_id}_filtered.flagstat        
     
     """
+    samtools idxstats $bam \
+    | cut -f1 | grep $chr_regex | grep -v '*' \
+    | xargs samtools view $params.args --write-index -q $params.min_mapq -F $flag_remove -@ $task.cpus -o ${meta.id}_filtered.bam##idx##${meta.id}_filtered.bam.bai $bam
 
+    samtools flagstat ${meta.id}_filtered.bam > ${meta.id}_filtered.flagstat
+
+    echo ${task.process}:${meta.id} > command_lines.txt
+    cat .command.sh | grep -vE '^#!/bin|versions.txt\$|command_lines.txt\$|cat \\.command.sh' | sed 's/  */ /g' | awk NF >> command_lines.txt
+
+    echo 'cut: \$(cut --version 2>&1 | head -n1 | cut -d " " -f4) >> versions.txt
+    echo 'grep:' \$(grep --version 2>&1 | head -n1 | cut -d " " -f4) >> versions.txt
+    echo 'samtools:' \$(samtools --version 2>&1 | head -n 1 | cut -d " " -f2) > versions.txt
+    echo 'xargs: \$(xargs --version 2>&1 | head -n1 | cut -d " " -f4) >> versions.txt
+    """
+    
 }
+    
