@@ -35,8 +35,7 @@ jobs:
       - name: TEST-DOCKER
         run: |
           NXF_VER=21.10.6 nextflow run main.nf -profile test,docker --keep_merge --keep_trim
-          NXF_VER=21.10.6 nextflow run main.nf -profile test,docker --keep_merge --keep_trim --atacseq false
-
+          
       - name: Commit software versions
         run: |
           git config --global user.name 'atpoint'
