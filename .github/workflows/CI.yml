@@ -45,7 +45,7 @@ jobs:
           && cp atac_chip_preprocess_results/pipeline_info/software_versions.txt misc/software_versions.txt \
           && cp atac_chip_preprocess_results/pipeline_info/command_lines.txt misc/command_lines.txt \
           # Check if there is anything to commit
-          git_check=$(git diff --exit-code misc/software_versions.txt misc/command_lines > /dev/null && echo "NOTHING" || echo "LETSGO")
+          git_check=$(git diff --exit-code misc/* > /dev/null && echo "NOTHING" || echo "LETSGO")
           if [[ $git_check == "LETSGO" ]]; then
             git add misc/*.txt
             git commit -am "current software versions and command lines"
