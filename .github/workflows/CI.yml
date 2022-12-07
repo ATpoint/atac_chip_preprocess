@@ -2,34 +2,52 @@ name: CI
 
 on:
   push:
-    branches: 
-      - dev
-      - main
+    branches:
+      - '**'
     paths-ignore:
       - '*.md'
       - '*.ignore'
       - LICENSE
-      - environment.yml
-      - Dockerfile
-        
+      - Dockerfile      # as we build and push manually right now
+      - environment.yml # as we build and push manually right now
   pull_request:
-    branches: [ main ]
+    branches:
+      - '**'
 
   workflow_dispatch:
 
 jobs:
-  CI_TEST:
+  
+  atac_chip_preprocess_ci:
+    
     runs-on: ubuntu-latest
 
     steps:
+
       - uses: actions/checkout@v2
-      
-      - name: Install Nextflow
+
+      - name: INSTALL-NEXTFLOW
         run: |
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
-          
-      - name: test_docker
+
+      # Test via docker
+      - name: TEST-DOCKER
         run: |
           NXF_VER=21.10.6 nextflow run main.nf -profile test,docker --keep_merge --keep_trim
           NXF_VER=21.10.6 nextflow run main.nf -profile test,docker --keep_merge --keep_trim --atacseq false
+
+      - name: Commit software versions
+        run: |
+          git config --global user.name 'atpoint'
+          git config --global user.email 'atpoint@users.noreply.github.com'
+          mkdir -p misc \
+          && cp atac_chip_preprocess_results/pipeline_info/software_versions.txt misc/software_versions.txt \
+          && cp atac_chip_preprocess_results/pipeline_info/command_lines.txt misc/command_lines.txt \
+          # Check if there is anything to commit
+          git_check=$(git diff --exit-code misc/software_versions.txt misc/command_lines > /dev/null && echo "NOTHING" || echo "LETSGO")
+          if [[ $git_check == "LETSGO" ]]; then
+            git add misc/*.txt
+            git commit -am "current software versions and command lines"
+            git push          
+          fi
