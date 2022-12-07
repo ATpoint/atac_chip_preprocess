@@ -80,7 +80,7 @@ We used reasonable defaults for all processing steps that should be used without
 - `--align_additional`: additional arguments for the `bowtie2` alignment process beyond what is coded in the module definition, default is `-X2000 --very-sensitive`, see `bowtie2` [manual](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml)
 - `--sort_additional`: additional arguments for the `samtools` sorting process beyond what is coded in the module definition, default is `-l 6` to compress the resulting BAM file to that level  
 - `--filter_additional`: additional arguments for the `samtools view` filtering process beyond what is described above and given with the `-q` and `-F` flags
-- `--macs_additional`: additional arguments for the `macs2 callpeak`, default is `--keep-dup=all` since we provide already deduplicated data to that process  
+- `--macs_additional`: additional arguments for the `macs2 callpeak`, default is in any case `--keep-dup=all` since we provide already deduplicated data to that process and if ATAC-seq data are processed (default) then `--nomodel --extsize 100 --shift -50 --min-length 250` to provide some smoothing when using the cutsites for peak calling.  
 
 ## Resources
 
