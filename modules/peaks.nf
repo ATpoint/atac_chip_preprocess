@@ -27,15 +27,15 @@ process Peaks {
     script:
 
     if(params.atacseq){ format = 'BED' } else { format = meta.single_end ? 'BAM' : 'BAMPE' }
-    species = params.species
-    args = params.atacseq ? '--nomodel --extsize 100 --shift -50 --min-length 250' : ''
+    def species = params.species
+    def args2 = params.atacseq ? '--nomodel --extsize 100 --shift -50 --min-length 250' : ' '
     
     if(params.filter_blacklist){
         
         """
         export OPENBLAS_NUM_THREADS=1 # should keep blas library from unwanted multithreading
 
-        macs2 callpeak $args --tempdir ./ -f $format -g $species -t $data -n ${meta.id}_all
+        macs2 callpeak $params.args $args2 --tempdir ./ -f $format -g $species -t $data -n ${meta.id}_all
 
         bedtools intersect -v -a ${meta.id}_all_peaks.narrowPeak -b $blacklist > ${meta.id}_peaks.narrowPeak
         bedtools intersect -v -a ${meta.id}_all_summits.bed -b $blacklist > ${meta.id}_peaks.bed
@@ -52,7 +52,7 @@ process Peaks {
         """
         export OPENBLAS_NUM_THREADS=1 # should keep blas library from unwanted multithreading
 
-        macs2 callpeak $args --tempdir ./ -f $format -g $species -t $data -n ${meta.id}
+        macs2 callpeak $params.args $args2 --tempdir ./ -f $format -g $species -t $data -n ${meta.id}
 
         echo ${task.process}:${meta.id} > command_lines.txt
         cat .command.sh | grep -vE '^#!/bin|versions.txt\$|command_lines.txt\$|cat \\.command.sh' | sed 's/  */ /g' | awk NF >> command_lines.txt
