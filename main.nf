@@ -53,31 +53,62 @@ evaluate(new File("${baseDir}/functions/validate_schema_params.nf"))
 
 include{ ValidateSamplesheet } from './modules/validatesamplesheet'
 
+//------------------------------------------------------------------------
+
 include{ CatFastq } from './modules/cat_fastq' addParams(outdir: params.merge_dir, keep: params.keep_merge)
+
+//------------------------------------------------------------------------
 
 include{ Fastqc } from './modules/fastqc' addParams(outdir: params.fastqc_dir)
 
+//------------------------------------------------------------------------
+
 include{ Trim } from './modules/trim' addParams(outdir: params.trim_dir, args: params.trim_additional, keep: params.keep_merge)
+
+//------------------------------------------------------------------------
 
 include{ Align } from './modules/align' addParams(outdir: params.align_dir, args: params.align_additional, args2: params.sort_additional)
 
+//------------------------------------------------------------------------
+
 include{ Chromsizes } from './modules/chromsizes' addParams(outdir: params.misc_dir)
+
+//------------------------------------------------------------------------
 
 include{ Filter } from './modules/filter' addParams(outdir: params.filter_dir, args: params.filter_additional)
 
+//------------------------------------------------------------------------
+
 include{ Isizes } from './modules/isizes' addParams(outdir: params.misc_dir)
+
+//------------------------------------------------------------------------
 
 include{ Cutsites } from './modules/cutsites' addParams(outdir: params.bed_dir)
 
-include{ Peaks } from './modules/peaks' addParams(outdir: params.peaks_dir, args: params.macs_additional)
+//------------------------------------------------------------------------
+
+// If ATAC-seq => set default, if not ATAC-seq => set different defaults, or overwrite completely if the user uses --macs_additional
+args_peaks = params.macs_additional=='' ? (params.atacseq ? '--keep-dup=all --nomodel --extsize 100 --shift -50 --min-length 250' : '--keep-dup=all') : params.macs_additional
+
+include{ Peaks } from './modules/peaks' addParams(outdir: params.peaks_dir, args: args_peaks)
+
+//------------------------------------------------------------------------
 
 include{ Frips } from './modules/frips' addParams(outdir: params.frip_dir)
 
+//------------------------------------------------------------------------
+
 include{ FripsCollect } from './modules/frips' addParams(outdir: params.frip_dir)
+
+//------------------------------------------------------------------------
 
 include{ Bigwigs } from './modules/bigwigs' addParams(outdir: params.bigwig_dir)
 
+//------------------------------------------------------------------------
+
 include{ Multiqc } from './modules/multiqc' addParams(outdir: params.multiqc_dir)
+
+//------------------------------------------------------------------------
 
 include{ CommandLines } from './modules/commandline' addParams(outdir: params.pipeline_dir)                                                              
 
@@ -238,9 +269,19 @@ workflow {
     // Chromsizes
     // ----------------------------------------------------------------------------------------
 
-    Chromsizes(Align.out.tuple_bam.first())
+    // This sort makes the channel order deterministic as channel order itself is unsorted/random
+    // and hence a simple first() would result in different files to fetch chromsizes from so
+    // a -resume would still cause rerun of that process and as such all downstream processes
+    // that depend on the chromsizes output
+    ch_for_chromsizes = Align.out.tuple_bam
+                        .map { [it[1].getName(), it[1]] }
+                        .toSortedList( { a, b -> b[1] <=> a[1] } )
+                        .map{it[0]}
+                        .map{it[1]}
+                        
+    Chromsizes(ch_for_chromsizes)
     chromsizes_versions = Chromsizes.out.versions
-
+    
     // ----------------------------------------------------------------------------------------
     // Filtering of alignments
     // ----------------------------------------------------------------------------------------

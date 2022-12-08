@@ -58,7 +58,7 @@ schema.filter_additional = [value: '', type: 'string']
 
 // Peak calling, FRiPs and Bigwigs
 schema.title6           = [title: 'PEAK CALLING / QC OPTIONS']
-schema.macs_additional  = [value: '--keep-dup=all', type: 'string']
+schema.macs_additional  = [value: '', type: 'string']
 schema.filter_blacklist = [value: true, type: 'logical']
 schema.fragment_length  = [value: 250, type: 'numeric']
 

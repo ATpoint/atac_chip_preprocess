@@ -16,7 +16,7 @@ process Chromsizes {
     container params.container
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    path(bam)
 
     output:
     path("chromsizes.txt"), emit: chromsizes
@@ -27,7 +27,7 @@ process Chromsizes {
     """
     samtools view -H $bam | grep "^@SQ" | cut -f2,3 | awk 'OFS="\\t" {gsub("SN:|LN:","");print}' | sort -k1,1 > chromsizes.txt
 
-    echo ${task.process}:${meta.id} > command_lines.txt
+    echo ${task.process}: > command_lines.txt
     cat .command.sh | grep -vE '^#!/bin|versions.txt\$|command_lines.txt\$|cat \\.command.sh' | sed 's/  */ /g' | awk NF >> command_lines.txt
 
     echo 'awk:' \$(awk -W version 2>&1 | head -n 1 | cut -d " " -f2,3 | tr " " "-") > versions.txt
