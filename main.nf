@@ -397,7 +397,7 @@ workflow {
     ch_for_bigwigs = params.atacseq ? Cutsites.out.tuple_cutsites : Filter.out.tuple_bam.map { 
                                                                         [it[0], it[1]]
                                                                     }
-    Bigwigs(ch_for_bigwigs, Chromsizes.out.chromsizes)
+    Bigwigs(ch_for_bigwigs, Chromsizes.out.chromsizes.collect())
     bigwigs_versions = Bigwigs.out.versions
 
     // ----------------------------------------------------------------------------------------
