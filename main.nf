@@ -269,9 +269,20 @@ workflow {
     // Chromsizes
     // ----------------------------------------------------------------------------------------
 
-    Chromsizes(Align.out.tuple_bam.first())
-    chromsizes_versions = Chromsizes.out.versions
+    // This sort makes the channel order deterministic as channel order itself is unsorted/random
+    // and hence a simple first() would result in different files to fetch chromsizes from so
+    // a -resume would still cause rerun of that process and as such all downstream processes
+    // that depend on the chromsizes output
+    ch_for_chromsizes = Align.out.tuple_bam
+                        .map { [it[1].getName(), it[1]] }
+                        .toSortedList()
+                        .flatMap()
+                        .first()
+                        .map {it[1]}
 
+    Chromsizes(ch_for_chromsizes)
+    chromsizes_versions = Chromsizes.out.versions
+    
     // ----------------------------------------------------------------------------------------
     // Filtering of alignments
     // ----------------------------------------------------------------------------------------
