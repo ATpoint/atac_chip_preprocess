@@ -10,9 +10,6 @@ on:
       - LICENSE
       - Dockerfile      # as we build and push manually right now
       - environment.yml # as we build and push manually right now
-  pull_request:
-    branches:
-      - '**'
 
   workflow_dispatch:
 
@@ -47,7 +44,7 @@ jobs:
           if [[ $git_check == "LETSGO" ]]; then
             git add misc/*.txt
             git commit -am "current software versions and command lines"
-            git push          
+            git push         
           fi
 
       - name: TEST-DOCKER-ChIPseq
