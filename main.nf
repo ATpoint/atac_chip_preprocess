@@ -275,11 +275,10 @@ workflow {
     // that depend on the chromsizes output
     ch_for_chromsizes = Align.out.tuple_bam
                         .map { [it[1].getName(), it[1]] }
-                        .toSortedList()
-                        .flatMap()
-                        .first()
-                        .map {it[1]}
-
+                        .toSortedList( { a, b -> b[1] <=> a[1] } )
+                        .map{it[0]}
+                        .map{it[1]}
+                        
     Chromsizes(ch_for_chromsizes)
     chromsizes_versions = Chromsizes.out.versions
     
