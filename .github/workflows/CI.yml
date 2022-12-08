@@ -31,8 +31,7 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
 
-      # Test via docker
-      - name: TEST-DOCKER
+      - name: TEST-DOCKER-ATACseq
         run: |
           NXF_VER=21.10.6 nextflow run main.nf -profile test,docker --keep_merge --keep_trim
           
@@ -50,3 +49,7 @@ jobs:
             git commit -am "current software versions and command lines"
             git push          
           fi
+
+      - name: TEST-DOCKER-ChIPseq
+        run: |
+          NXF_VER=21.10.6 nextflow run main.nf -profile test,docker --keep_merge --keep_trim --atacseq false --macs_additional '\--keep-dup=all --nomodel --extsize 150'
