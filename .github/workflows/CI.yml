@@ -34,7 +34,7 @@ jobs:
         run: |
           git config --global user.name 'atpoint'
           git config --global user.email 'atpoint@users.noreply.github.com'
-          mkdir -p misc && cp atac_chip_preprocess/pipeline_info/*.txt misc/
+          mkdir -p misc && cp atac_chip_preprocess_results/pipeline_info/*.txt misc/
           git add misc/*.txt
           if (( $(git status -s | grep -c 'misc/') > 0 )); then 
             git commit -am "update software version and command line reports"
