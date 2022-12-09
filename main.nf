@@ -63,7 +63,7 @@ include{ Fastqc } from './modules/fastqc' addParams(outdir: params.fastqc_dir)
 
 //------------------------------------------------------------------------
 
-include{ Trim } from './modules/trim' addParams(outdir: params.trim_dir, args: params.trim_additional, keep: params.keep_merge)
+include{ Trim } from './modules/trim' addParams(outdir: params.trim_dir, args: params.trim_additional, keep: params.keep_trim)
 
 //------------------------------------------------------------------------
 
