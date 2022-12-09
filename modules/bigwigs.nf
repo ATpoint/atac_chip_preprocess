@@ -39,7 +39,7 @@ process Bigwigs {
         echo ${task.process}:${meta.id} > command_lines.txt
         cat .command.sh | grep -vE '^#!/bin|versions.txt\$|command_lines.txt\$|cat \\.command.sh' | sed 's/  */ /g' | awk NF >> command_lines.txt
 
-        echo 'bedGraphToBigWig' \$(bedGraphToBigWig 2>&1 | head -n1 | cut -d " " -f3) > versions.txt
+        echo 'bedGraphToBigWig:' \$(bedGraphToBigWig 2>&1 | head -n1 | cut -d " " -f3) > versions.txt
         echo 'bedtools:' \$(bedtools --version | head -n 1 | cut -d " " -f2) >> versions.txt
         """
 
