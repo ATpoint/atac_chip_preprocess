@@ -16,9 +16,9 @@ The workflow consists of these steps:
 - initial QC with `fastqc`
 - merging of lane replicates per sample into one fastq file per R1/R2
 - adapter and quality trimming with `fastp`
-- mapping with `bowtie2`
+- mapping with `bowtie2` using the `--very-sensitive` (and `-X 2000` for paired-end data) flags  
 - duplicate marking with `samblaster`
-- removal of MAPQ < 20, non-primary or supplementary, reads mapped to non-primary (random/unplaced) chromosomes, mitochondrial alignments and duplicate reads with `samtools`
+- removal of MAPQ < 20, non-primary or supplementary, reads mapped to non-primary (random/unplaced) chromosomes (regex `chr[1-9,X,Y]`), mitochondrial alignments and duplicate reads with `samtools`
 - for paired-end data fetching of insert size metrics with `picard`
 - for ATAC-seq data extraction of transposome insertion events (cutsites) using custom GNU tool combinations
 - peak calling with `macs2` and filtering of peaks against NGS blacklists (ENCODE+mitochondrial homologs in the nuclear genome, the latter for ATAC-seq only) using `bedtools`
