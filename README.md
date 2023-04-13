@@ -62,6 +62,7 @@ We used reasonable defaults for all processing steps that should be used without
 
 **General options**  
 
+- `--outdir`, path to desired output folder collecting all results  
 - `--atacseq`, a logical, set to `false` if processing something like ChIP-seq data, by default `true` for ATAC-seq data  
 
 **Filtering options**  
