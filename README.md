@@ -38,7 +38,7 @@ An overview of current software versions and exact command lines when using defa
 
 ## Usage
 
-The three minimal parameters the user has to provide are the following ones:
+The minimal parameters the user has to provide are the following ones:
 
 - `--samplesheet`: path to a [samplesheet csv file](test/samplesheet.csv) with three columns, being `sample` (the sample name), `r1` (path to R1) and `r2` (path to R2), where r2 can be empty. If empty, then the sample is considered single-end.  
 - `--index`: path to a folder containing a `bowtie2` index with the typical `*.bt2` files. Note, it is the path to the folder, not the path to the index basename, as the pipeline will find the bt2 files automatically.  
@@ -50,11 +50,13 @@ On our HPC we typically use:
 
 ```bash
 # Example for mouse ATAC-seq data
-NXF_VER=21.10.6 nextflow run atpoint/atac_chip_preprocess -r main -profile docker,test --samplesheet path/to/samplesheet.csv --index path/to/index_folder --species mm
+NXF_VER=21.10.6 nextflow run atpoint/atac_chip_preprocess -r main -profile apptainer,test --samplesheet path/to/samplesheet.csv --index path/to/index_folder --species mm
 
 # Example for mouse ChIP-seq data
-NXF_VER=21.10.6 nextflow run atpoint/atac_chip_preprocess -r main -profile docker,test --samplesheet path/to/samplesheet.csv --index path/to/index_folder --species mm --atacseq false
+NXF_VER=21.10.6 nextflow run atpoint/atac_chip_preprocess -r main -profile apptainer,test --samplesheet path/to/samplesheet.csv --index path/to/index_folder --species mm --atacseq false
 ```
+
+Use either of `-profile docker/singularity/apptainer` to use any of these container engines.
 
 ## Options
 
