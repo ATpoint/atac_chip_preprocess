@@ -12,7 +12,7 @@ def Map schema = [:] // don't change this line
 
 // General options:
 schema.title1         = [title: 'GENERAL OPTIONS']
-schema.min_nf_version = [value: '21.10.6', type: 'string', mandatory: true, allowed: '']
+schema.min_nf_version = [value: '23.04.0', type: 'string', mandatory: true, allowed: '']
 schema.publishmode    = [value: 'copy', type: 'string', mandatory: true, allowed: ['symlink', 'rellink', 'link', 'copy', 'copyNoFollow', 'move']]
 schema.container      = [value: "atpoint/atac_chip_preprocess:v1.2.0", type: 'string', mandatory: false]
 

@@ -28,7 +28,7 @@ jobs:
 
       - name: TEST-DOCKER-ATACseq
         run: |
-          NXF_VER=21.10.6 nextflow run main.nf -profile test,docker --keep_merge --keep_trim
+          NXF_VER=23.04.0 nextflow run main.nf -profile test,docker --keep_merge --keep_trim
           
       - name: Commit software versions
         run: |
@@ -43,4 +43,4 @@ jobs:
 
       - name: TEST-DOCKER-ChIPseq
         run: |
-          NXF_VER=21.10.6 nextflow run main.nf -profile test,docker --keep_merge --keep_trim --atacseq false --macs_additional '\--keep-dup=all --nomodel --extsize 150'
+          NXF_VER=23.04.0 nextflow run main.nf -profile test,docker --keep_merge --keep_trim --atacseq false --macs_additional '\--keep-dup=all --nomodel --extsize 150'
