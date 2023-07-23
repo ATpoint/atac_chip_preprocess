@@ -20,5 +20,3 @@ dependencies:
   - tabix
   - ucsc-bedgraphtobigwig
   - ucsc-bigwigtobedgraph
-
-  

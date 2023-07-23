@@ -13,7 +13,6 @@ if(length_ss != 3 | sum_ss != 3)
 unique_sample <- unique(ss$sample)
 for(u in unique_sample){
   
-  # Libtype for same sample must be identical
   sx <- ss[ss$sample==u,]
   
   # R1 and R2 must not have duplicates
