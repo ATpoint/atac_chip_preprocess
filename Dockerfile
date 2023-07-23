@@ -1,4 +1,4 @@
-FROM condaforge/mambaforge:4.14.0-0
+FROM condaforge/mambaforge:latest
 
 COPY ["environment.yml", "./"]
 
