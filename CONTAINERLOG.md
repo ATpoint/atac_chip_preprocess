@@ -3,6 +3,9 @@
 Docker images are being built manually on GitPod and then pushed to https://hub.docker.com/r/atpoint/atac_chip_preprocess.  
 Changes are tracked here.  
 
+**v1.2.1:**
+- update all software versions
+
 **v1.2.0:**
 - update all software versions and run `conda clean` to decrease total image size 
 
