@@ -33,7 +33,7 @@ Currently, human and mouse is supported via the flag `--species` with either `hs
 Execute this command to run the pipeline on a tiny test dataset with minimal resources to explore outputs:
 
 ```bash
-NXF_VER=21.10.6 nextflow run atpoint/atac_chip_preprocess -r main -profile docker,test --keep_merge --keep_trim
+NXF_VER=23.04.0 nextflow run atpoint/atac_chip_preprocess -r main -profile docker,test --keep_merge --keep_trim
 ```
 
 An overview of current software versions and exact command lines when using default settings of the pipeline can be found [here](misc/).
