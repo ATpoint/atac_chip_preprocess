@@ -4,6 +4,7 @@
 - trim process will now always output fastp report regardless of `--keep_trim`
 - improve documentation
 - update software versions in container (v1.2.1)
+
 # v2.1
 - input is now a samplesheet indicating sample name and the R1/R2 files plus a group information.
 - separated trimming and alignment/sort into separate processes
