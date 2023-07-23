@@ -12,7 +12,9 @@ process CatFastq {
     publishDir = [
         path: params.outdir,
         mode: params.publishmode,
-        saveAs: { filename -> !(filename.endsWith("fq.gz") & params.keep) || filename.equals("versions.txt") || filename.equals("command_lines.txt") ? null : filename } 
+        saveAs: { filename -> 
+            (filename.endsWith("fq.gz") & params.keep) ? filename : null
+        } 
     ]
 
     container params.container
