@@ -97,7 +97,7 @@ The pipeline uses (in our opinion) reasonable defaults for all processing steps.
 
 ## Output
 
-By default, all outputs will be collected in `./atac_chip_preprocess_results/` relative to the directory from which the pipeline is launched. Use `--outdir` to change this. Outputs are:
+By default, all outputs will be collected in `./atac_chip_preprocess_results/` relative to the directory from which the pipeline is launched. Use `--outdir` to change this. Output folders are:
 
 - **alignments_filtered:** Sorted bam, bam index and flagstats for the filtered alignments.
 - **alignments_unfiltered:** Sorted bam, bam index and flagstats for the unfiltered alignments.
