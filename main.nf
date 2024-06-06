@@ -328,7 +328,7 @@ workflow {
 
         if(params.atacseq){
             if(params.species=="hs") {
-                blacklist = Channel.fromPath("$baseDir/assets/hg38/hg38_combined_blacklist.bed")
+                blacklist = Channel.fromPath("$baseDir/assets/hg38/hg38_combined_blacklist_v2.bed")
             }
             if(params.species=="mm") {
                 blacklist = Channel.fromPath("$baseDir/assets/mm10/mm10_combined_blacklist.bed")
